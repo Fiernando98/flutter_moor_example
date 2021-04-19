@@ -33,14 +33,15 @@ class _HomePageState extends State<HomePage> {
               itemCount: tasks.length,
               itemBuilder: (_, index) {
                 final Task itemTask = tasks[index];
-                return _buildListItem(itemTask, database);
+                return _buildListItem(
+                    itemTask: itemTask,
+                    onTap: () async => await database.deleteTask(itemTask));
               });
         });
   }
 
-  Widget _buildListItem(Task itemTask, AppDatabase database) {
-    return ListTile(
-        title: Text(itemTask.name),
-        onTap: () async => await database.deleteTask(itemTask));
+  Widget _buildListItem(
+      {required final Task itemTask, required final Function onTap}) {
+    return ListTile(title: Text('${itemTask.name}'), onTap: () => onTap);
   }
 }

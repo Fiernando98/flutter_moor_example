@@ -30,22 +30,28 @@ class AppDatabase extends _$AppDatabase {
   Stream<List<Task>> watchAllTasks() => select(tasks).watch();
 
   Future<Task?> getTask(final int _id) async {
-    Selectable selectable = customSelect(
-        "SELECT * FROM tasks WHERE id = $_id ORDER BY id DESC;",
-        readsFrom: {tasks});
-    List<QueryRow> _queryList = (await selectable.get() as List<QueryRow>);
-    if (_queryList.isEmpty) return null;
-    Map<String, dynamic> _jsonData = _queryList.first.data;
-    return Task(id: _jsonData["id"], name: _jsonData["name"]);
+    try {
+      Selectable selectable = customSelect(
+          "SELECT * FROM tasks WHERE id = $_id ORDER BY id DESC;",
+          readsFrom: {tasks});
+      List<QueryRow> _queryList = (await selectable.get() as List<QueryRow>);
+      if (_queryList.isEmpty) return null;
+      Map<String, dynamic> _jsonData = _queryList.first.data;
+      return Task(id: _jsonData["id"], name: _jsonData["name"]);
+    } on Exception {}
   }
 
   Future<int> getNextID() async {
-    Selectable selectable =
-        customSelect("SELECT MAX(id) FROM tasks;", readsFrom: {tasks});
-    List<QueryRow> _queryList = (await selectable.get() as List<QueryRow>);
-    if (_queryList.isEmpty) return 1;
-    Map<String, dynamic> _jsonData = _queryList.first.data;
-    return _jsonData["MAX(id)"] + 1;
+    try {
+      Selectable selectable =
+          customSelect("SELECT MAX(id) FROM tasks;", readsFrom: {tasks});
+      List<QueryRow> _queryList = (await selectable.get() as List<QueryRow>);
+      if (_queryList.isEmpty) return 1;
+      Map<String, dynamic> _jsonData = _queryList.first.data;
+      return (_jsonData["MAX(id)"] ?? 0) + 1;
+    } on Exception {
+      return 1;
+    }
   }
 
   Future insertTask(Task task) => into(tasks).insertOnConflictUpdate(task);
