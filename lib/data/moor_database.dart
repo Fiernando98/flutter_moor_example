@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:moor/ffi.dart';
 import 'package:moor/moor.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
 part 'moor_database.g.dart';
 
@@ -15,11 +19,17 @@ class Tasks extends Table {
       ];*/
 }
 
+LazyDatabase _openConnection() {
+  return LazyDatabase(() async {
+    final Directory dbFolder = await getApplicationDocumentsDirectory();
+    final File file = File(path.join(dbFolder.path, 'db.sqlite'));
+    return VmDatabase(file);
+  });
+}
+
 @UseMoor(tables: [Tasks])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase()
-      : super((FlutterQueryExecutor.inDatabaseFolder(
-            path: 'db.sqlite', logStatements: true)));
+  AppDatabase() : super(_openConnection());
 
   @override
   int get schemaVersion => 1;
