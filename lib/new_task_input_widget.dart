@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_moor_example/data/moor_database.dart';
+import 'package:flutter_moor_example/main.dart';
 import 'package:provider/provider.dart';
 
 class NewTaskInput extends StatefulWidget {
@@ -33,8 +34,9 @@ class _NewTaskInputState extends State<NewTaskInput> {
                     Task(id: await database.getNextID(), name: inputName);
                 await database.insertTask(task);
                 resetValuesAfterSubmit();
+                snackMessage("Tarea Registrada Exitosamente", context);
               } catch (error) {
-                print(error.toString());
+                snackErrorMessage("${error.toString()}", context);
               }
             }));
   }

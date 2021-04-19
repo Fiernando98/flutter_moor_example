@@ -7,6 +7,12 @@ class Tasks extends Table {
   IntColumn get id => integer().autoIncrement()();
 
   TextColumn get name => text().withLength(min: 1, max: 50)();
+/*
+  @override
+  List<String> get customConstraints => [
+        'FOREIGN KEY(user_a) REFERENCES users(id)',
+        'FOREIGN KEY(user_b) REFERENCES users(id)'
+      ];*/
 }
 
 @UseMoor(tables: [Tasks])

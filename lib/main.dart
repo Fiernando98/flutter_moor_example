@@ -18,3 +18,21 @@ class MyApp extends StatelessWidget {
         home: HomePage());
   }
 }
+
+void snackMessage(String message, BuildContext context) {
+  final SnackBar snackBar = SnackBar(
+      duration: Duration(seconds: 1),
+      backgroundColor: Colors.green,
+      content: Text(message,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)));
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}
+
+void snackErrorMessage(String message, BuildContext context) {
+  final SnackBar snackBar = SnackBar(
+      duration: Duration(seconds: 3),
+      backgroundColor: Colors.red[700],
+      content: Text(message,
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)));
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}

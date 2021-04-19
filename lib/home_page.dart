@@ -13,9 +13,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Tasks'),
-        ),
+        appBar: AppBar(title: Text('Tasks')),
         body: Column(children: <Widget>[
           Expanded(child: _buildTaskList(context)),
           NewTaskInput()
@@ -42,6 +40,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildListItem(
       {required final Task itemTask, required final Function onTap}) {
-    return ListTile(title: Text('${itemTask.name}'), onTap: () => onTap);
+    return ListTile(
+        title: Text('${itemTask.name}'), onTap: () async => await onTap());
   }
 }
