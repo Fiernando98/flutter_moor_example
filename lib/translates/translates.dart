@@ -9,6 +9,8 @@ abstract class Translates {
 
   String get students;
 
+  String get noStudentsAvailable;
+
   String get addStudent;
 
   String get firstName;
@@ -28,4 +30,14 @@ abstract class Translates {
   String get finish;
 
   String get successfullyCreatedStudent;
+
+  String get addRating;
+
+  String get rating;
+
+  String get enterRating;
+
+  String get invalidRating;
+
+  String get successfullyCreatedRating;
 }

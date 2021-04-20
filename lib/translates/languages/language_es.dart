@@ -5,6 +5,9 @@ class LanguageEs extends Translates {
   String get students => "Estudiantes";
 
   @override
+  String get noStudentsAvailable => "No hay Estudiantes Disponibles";
+
+  @override
   String get addStudent => "Agregar Estudiante";
 
   @override
@@ -33,4 +36,19 @@ class LanguageEs extends Translates {
 
   @override
   String get successfullyCreatedStudent => "Estudiante Creado Exitosamente";
+
+  @override
+  String get addRating => "Agregar Calificación";
+
+  @override
+  String get rating => "Calificación";
+
+  @override
+  String get enterRating => "Introdusca Calificación";
+
+  @override
+  String get invalidRating => "Calificacón Inválida";
+
+  @override
+  String get successfullyCreatedRating => "Calificación Creada Exitosamente";
 }

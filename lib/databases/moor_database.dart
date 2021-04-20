@@ -41,6 +41,9 @@ class StudentDao extends DatabaseAccessor<SchoolDatabase>
 
   Stream<List<Student>> watchAllStudents() => select(students).watch();
 
+  Future<Student> getStudent(final int id) =>
+      (select(students)..where((student) => student.id.equals(id))).getSingle();
+
   Future<int> getNextID() async {
     try {
       Selectable selectable =
@@ -67,4 +70,35 @@ class RatingDao extends DatabaseAccessor<SchoolDatabase> with _$RatingDaoMixin {
   final SchoolDatabase db;
 
   RatingDao(this.db) : super(db);
+
+  Stream<List<Rating>> watchStudentRatings(final int idStudent) =>
+      (select(ratings)..where((rating) => rating.idStudent.equals(idStudent)))
+          .watch();
+
+  Future<Rating> getRating(final int id) =>
+      (select(ratings)..where((rating) => rating.id.equals(id))).getSingle();
+
+  Future<List<Rating>> getRatingsByStudent(final int idStudent) =>
+      (select(ratings)..where((rating) => rating.idStudent.equals(idStudent)))
+          .get();
+
+  Future<int> getNextID() async {
+    try {
+      Selectable selectable =
+          customSelect("SELECT MAX(id) FROM ratings;", readsFrom: {ratings});
+      List<QueryRow> _queryList = (await selectable.get() as List<QueryRow>);
+      if (_queryList.isEmpty) return 1;
+      Map<String, dynamic> _jsonData = _queryList.first.data;
+      return (_jsonData["MAX(id)"] ?? 0) + 1;
+    } on Exception {
+      return 1;
+    }
+  }
+
+  Future insertRating(Rating rating) =>
+      into(ratings).insertOnConflictUpdate(rating);
+
+  Future updateRating(Rating rating) => update(ratings).replace(rating);
+
+  Future deleteRating(Rating rating) => delete(ratings).delete(rating);
 }

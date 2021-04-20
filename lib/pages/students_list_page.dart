@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_moor_example/databases/moor_database.dart';
+import 'package:flutter_moor_example/pages/create/create_rating_page.dart';
 import 'package:flutter_moor_example/pages/create/create_students_page.dart';
 import 'package:flutter_moor_example/translates/translates.dart';
 import 'package:provider/provider.dart';
@@ -24,22 +25,44 @@ class _StudentsListPageState extends State<StudentsListPage> {
             return Center(
                 child: Padding(
                     padding: EdgeInsets.all(20),
-                    child: Text("No Students Available")));
+                    child: Text(
+                        "${Translates.of(context)?.noStudentsAvailable}")));
           return ListView.builder(
               itemCount: listData.length,
               itemBuilder: (_, index) {
                 final Student item = listData[index];
                 return _buildListStudentItem(
                     title: "${item.firstName} ${item.lastName}",
-                    onTap: () async =>
-                        await database.studentDao.deleteStudent(item));
+                    database: database,
+                    idStudent: item.id,
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            CreateRatingPage(idStudent: item.id))));
               });
         });
   }
 
   Widget _buildListStudentItem(
-      {required final String title, final GestureTapCallback? onTap}) {
-    return ListTile(title: Text(title), onTap: onTap);
+      {required final String title,
+      required final SchoolDatabase database,
+      required final int idStudent,
+      final GestureTapCallback? onTap}) {
+    return Column(mainAxisSize: MainAxisSize.min, children: [
+      ListTile(title: Text(title), onTap: onTap),
+      StreamBuilder(
+          stream: database.ratingDao.watchStudentRatings(idStudent),
+          builder: (context, AsyncSnapshot<List<Rating>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return Center(child: CircularProgressIndicator());
+            final List<Rating> listData = snapshot.data ?? [];
+            if (listData.isEmpty) return Container();
+            return Column(
+                children: listData
+                    .map((rating) =>
+                        Text("${rating.rating}", textAlign: TextAlign.start))
+                    .toList());
+          })
+    ]);
   }
 
   @override
