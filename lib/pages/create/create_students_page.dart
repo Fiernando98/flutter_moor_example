@@ -78,8 +78,7 @@ class _CreateStudentsPageState extends State<CreateStudentsPage> {
             firstName: _firstName,
             lastName: _lastName);
         await database.studentDao.insertStudent(student);
-        snackMessage(
-            message: "Tarea Registrada Exitosamente", context: context);
+        snackMessage(message: "Successfully Created Student", context: context);
         Navigator.of(context).maybePop();
       } else {
         snackMessage(message: "Form Error", context: context, isError: true);
