@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_moor_example/databases/moor_database.dart';
 import 'package:flutter_moor_example/main.dart';
+import 'package:flutter_moor_example/translates/translates.dart';
 import 'package:provider/provider.dart';
 
 class CreateStudentsPage extends StatefulWidget {
@@ -21,15 +22,16 @@ class _CreateStudentsPageState extends State<CreateStudentsPage> {
             initialValue: _firstName,
             onSaved: (val) => _firstName = val ?? "",
             style: TextStyle(fontWeight: FontWeight.bold),
-            validator: (val) =>
-                val == null || val.isEmpty ? "Invalid first name" : null,
+            validator: (val) => val == null || val.isEmpty
+                ? "${Translates.of(context)?.invalidFirstName}"
+                : null,
             decoration: InputDecoration(
                 border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                 prefixIcon:
                     Icon(Icons.person, color: Theme.of(context).accentColor),
-                labelText: "First Name",
-                hintText: "Enter your first name")));
+                labelText: "${Translates.of(context)?.firstName}",
+                hintText: "${Translates.of(context)?.enterFirstName}")));
   }
 
   Widget _inputLastName() {
@@ -40,21 +42,22 @@ class _CreateStudentsPageState extends State<CreateStudentsPage> {
             initialValue: _lastName,
             onSaved: (val) => _lastName = val ?? "",
             style: TextStyle(fontWeight: FontWeight.bold),
-            validator: (val) =>
-                val == null || val.isEmpty ? "Invalid last name" : null,
+            validator: (val) => val == null || val.isEmpty
+                ? "${Translates.of(context)?.invalidLastName}"
+                : null,
             decoration: InputDecoration(
                 border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                 prefixIcon:
                     Icon(Icons.person, color: Theme.of(context).accentColor),
-                labelText: "Last Name",
-                hintText: "Enter your last name")));
+                labelText: "${Translates.of(context)?.lastName}",
+                hintText: "${Translates.of(context)?.enterLastName}")));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Add Student")),
+        appBar: AppBar(title: Text("${Translates.of(context)?.addStudent}")),
         body: Form(
             key: _formKey,
             child: ListView(
@@ -62,7 +65,7 @@ class _CreateStudentsPageState extends State<CreateStudentsPage> {
                 children: [_inputFirstName(), _inputLastName()])),
         floatingActionButton: FloatingActionButton.extended(
             onPressed: _saveStudent,
-            label: Text("Finish"),
+            label: Text("${Translates.of(context)?.finish}"),
             icon: Icon(Icons.done)));
   }
 
@@ -78,10 +81,15 @@ class _CreateStudentsPageState extends State<CreateStudentsPage> {
             firstName: _firstName,
             lastName: _lastName);
         await database.studentDao.insertStudent(student);
-        snackMessage(message: "Successfully Created Student", context: context);
+        snackMessage(
+            message: "${Translates.of(context)?.successfullyCreatedStudent}",
+            context: context);
         Navigator.of(context).maybePop();
       } else {
-        snackMessage(message: "Form Error", context: context, isError: true);
+        snackMessage(
+            message: "${Translates.of(context)?.formError}",
+            context: context,
+            isError: true);
       }
     } catch (error) {
       snackMessage(

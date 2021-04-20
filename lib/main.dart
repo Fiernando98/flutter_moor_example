@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_moor_example/databases/moor_database.dart';
 import 'package:flutter_moor_example/pages/students_list_page.dart';
+import 'package:flutter_moor_example/translates/app_localization_delegate.dart';
+import 'package:flutter_moor_example/translates/translates.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -14,6 +17,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Moor',
+        localizationsDelegates: [
+          AppLocalizationsDelegate(),
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate
+        ],
+        supportedLocales:
+            languagesSupported.map((language) => Locale(language)),
         home: StudentsListPage());
   }
 }

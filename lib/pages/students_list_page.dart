@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_moor_example/databases/moor_database.dart';
 import 'package:flutter_moor_example/pages/create/create_students_page.dart';
+import 'package:flutter_moor_example/translates/translates.dart';
 import 'package:provider/provider.dart';
 
 class StudentsListPage extends StatefulWidget {
@@ -44,14 +45,14 @@ class _StudentsListPageState extends State<StudentsListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Students")),
+        appBar: AppBar(title: Text("${Translates.of(context)?.students}")),
         body: _buildStudentsList(),
         floatingActionButton: FloatingActionButton.extended(
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => CreateStudentsPage()));
             },
-            label: Text("Add Student"),
+            label: Text("${Translates.of(context)?.addStudent}"),
             icon: Icon(Icons.add)));
   }
 }
